@@ -1,6 +1,6 @@
 package id.my.hendisantika.springbootthymeleafproducts.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import id.my.hendisantika.springbootthymeleafproducts.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,16 +29,21 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    @Autowired
-    private UserDetailsService userDetailsService;
+//    @Autowired
+//    private UserDetailsService userDetailsService;
 
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+//    @Autowired
+//    private BCryptPasswordEncoder passwordEncoder;
 
 //    @Bean
 //    protected SecurityFilterChain configure(AuthenticationManagerBuilder auth) throws Exception {
 //        return auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
 //    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new CustomUserDetailsService();
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(
