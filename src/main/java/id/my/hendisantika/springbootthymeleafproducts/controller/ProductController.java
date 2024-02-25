@@ -5,6 +5,7 @@ import id.my.hendisantika.springbootthymeleafproducts.entity.Product;
 import id.my.hendisantika.springbootthymeleafproducts.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,6 +32,7 @@ import java.util.List;
  * Time: 11:42
  * To change this template use File | Settings | File Templates.
  */
+@Slf4j
 @Controller
 @RequestMapping("/products")
 @RequiredArgsConstructor
@@ -38,7 +40,7 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @GetMapping("")
+    @GetMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<Product>> getAll() {
@@ -69,12 +71,12 @@ public class ProductController {
         }
     }
 
-    @PostMapping("")
+    @PostMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> addOrUpdateProduct(@RequestBody @Valid ProductAddRequest request) {
-        System.out.println(request);
+        log.info(request.toString());
         productService.addOrUpdateProduct(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
