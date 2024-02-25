@@ -52,4 +52,8 @@ public class ProductService {
         }
 
     }
+
+    public Product findById(Integer id) {
+        return productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException());
+    }
 }
