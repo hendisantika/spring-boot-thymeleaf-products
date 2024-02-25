@@ -1,11 +1,15 @@
 package id.my.hendisantika.springbootthymeleafproducts.service;
 
+import id.my.hendisantika.springbootthymeleafproducts.dto.ProductAddRequest;
 import id.my.hendisantika.springbootthymeleafproducts.entity.Product;
 import id.my.hendisantika.springbootthymeleafproducts.exception.DataIsEmptyException;
 import id.my.hendisantika.springbootthymeleafproducts.repository.ProductRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -29,5 +33,23 @@ public class ProductService {
             throw new DataIsEmptyException();
         }
         return products;
+    }
+
+    @Transactional
+    public void addOrUpdateProduct(ProductAddRequest productAddRequest) {
+        if (productAddRequest.getIdProduct() == null) {
+            Product product = new Product();
+            product.setName(productAddRequest.getProductName());
+            product.setPrice(new BigDecimal(productAddRequest.getProductPrice()));
+            product.setExpireDate(productAddRequest.getProductExpire());
+            productRepository.save(product);
+        } else {
+            Product currentProduct = productRepository.findById(productAddRequest.getIdProduct()).orElseThrow(() -> new EntityNotFoundException());
+            currentProduct.setName(productAddRequest.getProductName());
+            currentProduct.setPrice(new BigDecimal(productAddRequest.getProductPrice()));
+            currentProduct.setExpireDate(productAddRequest.getProductExpire());
+            productRepository.save(currentProduct);
+        }
+
     }
 }
