@@ -6,5 +6,5 @@ spring:
     cache: false
   profiles:
     #active: heroku
-    active: localhost
-    #active: docker
+    #active: localhost
+    active: docker

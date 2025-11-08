@@ -1,8 +1,15 @@
 server:
   port: 1111
 spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
   datasource:
-    url: jdbc:mysql://172.17.0.3:3306/posdb
-    username: app_user
-    password: admin1234
-    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/posdb
+    username: yu71
+    password: 53cret
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  docker:
+    compose:
+      enabled: true
+      file: docker-compose.yml
