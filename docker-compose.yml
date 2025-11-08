@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:9.5.0
+    container_name: products-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 53cret
+      MYSQL_DATABASE: posdb
+      MYSQL_USER: yu71
+      MYSQL_PASSWORD: 53cret
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "yu71", "-p53cret" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - products-network
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  products-network:
+    driver: bridge
