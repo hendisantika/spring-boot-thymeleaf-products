@@ -1,5 +1,6 @@
 version: 2
 updates:
+  # Maven dependencies (pom.xml)
   - package-ecosystem: maven
     directory: "/"
     schedule:
@@ -7,3 +8,64 @@ updates:
       time: '21:00'
       timezone: Asia/Jakarta
     open-pull-requests-limit: 10
+    target-branch: main
+    labels:
+      - dependencies
+      - java
+    commit-message:
+      prefix: "build(deps)"
+      prefix-development: "build(deps-dev)"
+      include: scope
+    groups:
+      # Spring Boot parent and Spring-managed artifacts move together
+      spring:
+        patterns:
+          - "org.springframework*"
+          - "org.thymeleaf*"
+        update-types:
+          - minor
+          - patch
+      # Everything else: batch minor/patch bumps into a single PR
+      maven-minor-patch:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "org.springframework*"
+          - "org.thymeleaf*"
+        update-types:
+          - minor
+          - patch
+
+  # GitHub Actions used in .github/workflows
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: '21:00'
+      timezone: Asia/Jakarta
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - github-actions
+    commit-message:
+      prefix: "ci(deps)"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  # Docker images in docker-compose.yml (MySQL)
+  - package-ecosystem: docker-compose
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: '21:00'
+      timezone: Asia/Jakarta
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - docker
+    commit-message:
+      prefix: "build(docker)"
