@@ -1,5 +1,10 @@
 # spring-boot-thymeleaf-products
 
+[![Java CI with Maven](https://github.com/hendisantika/spring-boot-thymeleaf-products/actions/workflows/maven.yml/badge.svg)](https://github.com/hendisantika/spring-boot-thymeleaf-products/actions/workflows/maven.yml)
+![Java](https://img.shields.io/badge/Java-25-orange?logo=openjdk)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1.2-6DB33F?logo=springboot)
+![MySQL](https://img.shields.io/badge/MySQL-9.5.0-4479A1?logo=mysql&logoColor=white)
+
 A Spring Boot application with Thymeleaf for product management, featuring Spring Security authentication and MySQL
 database integration with Docker Compose support.
 
@@ -15,7 +20,7 @@ database integration with Docker Compose support.
 
 ## Prerequisites
 
-- Java 21 or higher
+- Java 25 (JDK 25, e.g. Eclipse Temurin)
 - Docker and Docker Compose
 - Maven (or use the included Maven wrapper)
 
@@ -117,10 +122,44 @@ spring:
 
 The packaged JAR will be available in the `target/` directory.
 
+### Run Tests
+
+The context-load test connects to a real MySQL database (the `docker` profile settings), so start MySQL first:
+
+```bash
+docker compose up -d
+./mvnw test
+```
+
+## Continuous Integration
+
+GitHub Actions (`.github/workflows/maven.yml`) runs on every push and pull request to `main`, and can also be started
+manually:
+
+- Sets up **Temurin JDK 25** with Maven dependency caching
+- Starts a **MySQL 9.5.0** service container (same credentials as `docker-compose.yml`)
+- Builds and tests with `./mvnw -B package`
+- On pushes to `main`, submits the Maven dependency graph to GitHub to improve Dependabot alerts
+
+## Dependency Updates (Dependabot)
+
+`.github/dependabot.yml` keeps dependencies current:
+
+| Ecosystem      | Schedule                 | Notes                                                                  |
+|----------------|--------------------------|------------------------------------------------------------------------|
+| Maven          | Daily, 21:00 WIB         | Spring/Thymeleaf and other minor/patch bumps are grouped into single PRs |
+| GitHub Actions | Weekly (Monday), 21:00 WIB | All action updates grouped into one PR                                 |
+| Docker Compose | Weekly (Monday), 21:00 WIB | Tracks the MySQL image in `docker-compose.yml`                         |
+
+PRs are labelled `dependencies` and use conventional commit prefixes (`build(deps)`, `ci(deps)`, `build(docker)`).
+
 ## Project Structure
 
 ```
 .
+├── .github/
+│   ├── dependabot.yml              # Dependabot configuration
+│   └── workflows/maven.yml         # GitHub Actions CI pipeline
 ├── docker-compose.yml              # Docker Compose configuration
 ├── init.sql                        # Database initialization script
 ├── pom.xml                         # Maven configuration
@@ -145,15 +184,15 @@ The packaged JAR will be available in the `target/` directory.
 
 ## Technologies Used
 
-- **Spring Boot 3.5.7**
+- **Spring Boot 4.1.2**
 - **Spring Data JPA**
-- **Spring Security**
+- **Spring Security 7**
 - **Thymeleaf**
 - **MySQL 9.5.0**
 - **Docker & Docker Compose**
 - **Lombok**
 - **Bootstrap 3**
-- **Java 21**
+- **Java 25**
 
 ## Development
 
